@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+   https://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/context 
+   https://www.springframework.org/schema/context/spring-context.xsd">
+<context:annotation-config/>
+<!-- ↪ 없으면 @Component를 못읽는다 -->
+
+<bean id="productService" class="ch10.shop.ProductService"></bean>
+<bean id="orderService" class="ch10.shop.OrderService"></bean>
+
+<bean id="orderSearchClientFactory" class="ch07.xml.search.SearchClientFactoryBean">
+	<qualifier value="order"/>
+	<property name="server" value="10.20.30.40"/>
+	<property name="port" value="8888"></property>
+	<property name="contentType" value="json"></property>
+</bean>
+
+<bean id="productSearchClientFactory"
+	class="ch07.xml.search.SearchClientFactoryBean">
+	<property name="server" value="10.20.30.41"/>
+	<property name="port" value="9999"/>
+	<property name="contentType" value="json"/> 
+</bean>
+
+<bean id="searchServiceHealthChecker"
+	class="ch07.xml.search.SearchServiceHealthChecker">
+	<property name="factories">
+	<list>
+		<ref bean="orderSearchClientFactory"/>
+		<ref bean="productSearchClientFactory"/>
+	</list>
+	</property>
+</bean>
+
+<bean id="erpFactory" class="ch02.erp.ErpClientFactory" factory-method="instance">
+	<constructor-arg>
+		<props>
+			<prop key="server">10.50.0.101</prop>
+		</props>
+	</constructor-arg>
+</bean>
+</beans>

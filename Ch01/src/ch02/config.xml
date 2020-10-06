@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="user1" class="ch02.service.User">
+		<constructor-arg value="bkchoi"/>
+		<constructor-arg value="1234"/>
+	</bean>
+	
+	<bean id="user2" class="ch02.service.User">
+		<constructor-arg value="madvirus"/>
+		<constructor-arg value="qwer"/>
+	</bean>
+	
+	<bean id="userRepository" class="ch02.service.UserRepository">
+		<property name="users">
+			<list>
+				<ref bean="user1"/>
+				<ref bean="user2"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="authenticationService" class="ch02.service.AuthenticationService">
+		<property name="userRepository" ref="userRepository"/>
+		<property name="failLogger" ref="failLogger"/>
+	</bean>
+	
+	<bean id="failLogger" class="ch02.service.AuthFailLogger">
+		<property name="threshold" value="2"/>
+	</bean>
+	
+	<bean id="pwoChangeSvc" class="ch02.service.PasswordChangeService">
+		<constructor-arg>
+			<ref bean="userRepository"/>
+		</constructor-arg>
+	</bean>
+</beans>
